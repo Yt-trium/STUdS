@@ -105,7 +105,7 @@ From: %s <%s>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 EOF;
-$header = sprintf($headers_str, NOMAPPLICATION, ADRESSEMAILADMIN );
+$headers = sprintf($headers_str, NOMAPPLICATION, ADRESSEMAILADMIN );
 
 
 if (isset($_POST["boutonnouveautitre"])) {
