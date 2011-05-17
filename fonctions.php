@@ -68,7 +68,7 @@ function get_sondage_from_id($id) {
   if(preg_match(";^[\w\d]{16}$;i",$id)) {
     $sondage=$connect->Execute("SELECT sondage.*,sujet_studs.sujet FROM sondage".
 			       " LEFT OUTER JOIN sujet_studs ON sondage.id_sondage = sujet_studs.id_sondage".
-			       " WHERE sondage.id_sondage = $id");
+			       " WHERE sondage.id_sondage = '$id'");
     $psondage = $sondage->FetchObject(false);
     $psondage->date_fin = strtotime($psondage->date_fin);
     return $psondage;
