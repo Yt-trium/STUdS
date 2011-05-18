@@ -109,11 +109,10 @@ if(isset($_POST['ajoutcomment'])) {
   }
 }
 
-
 // Action quand on clique le bouton participer
 $user_studs=$connect->Execute("SELECT * FROM user_studs WHERE id_sondage='$numsondage' ORDER BY id_users");
 $nbcolonnes=substr_count($dsondage->sujet,',')+1;
-if ( ! is_error(NO_POLL) && isset($_POST["boutonp"]) ){
+if ( ! is_error(NO_POLL) && isset($_POST["boutonp_x"]) ){
   //Si le nom est bien entré
   if (! isset($_POST["nom"]) || empty($_POST['nom']))
     $err |= NAME_EMPTY;
