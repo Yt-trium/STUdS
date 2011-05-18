@@ -118,6 +118,7 @@ if ( ! is_error(NO_POLL) && isset($_POST["boutonp_x"]) ){
     $err |= NAME_EMPTY;
   if(! is_error(NAME_EMPTY) && 
      (!isset($_SERVER['REMOTE_USER']) || $_POST["nom"] == $_SESSION["nom"]) ) {
+    $nouveauchoix = '';
     for ($i=0;$i<$nbcolonnes;$i++){
       // Si la checkbox est enclenchée alors la valeur est 1
       if (isset($_POST["choix$i"]) && $_POST["choix$i"] == '1'){
@@ -252,14 +253,14 @@ $ligneamodifier = -1;
 				$ligneamodifier=$i;
 			}
 			//test pour voir si une ligne est a modifier
-			if ($_POST['validermodifier'.$i.'_x']){
+			if (issetAndNoEmpty('validermodifier'.$i.'_x')) {
 				$modifier=$i;
 				$testmodifier=true;
 			}
 		}
 		//si le test est valide alors on affiche des checkbox pour entrer de nouvelles valeurs
 		if ($testmodifier){
-
+		  $nouveauchoix = '';
 			for ($i=0;$i<$nbcolonnes;$i++){
 				//recuperation des nouveaux choix de l'utilisateur
 				if (isset($_POST["choix$i"]) && $_POST["choix$i"] == 1){
@@ -301,8 +302,11 @@ if ($dsondage->format=="D"||$dsondage->format=="D+"){
 
 	//affichage des années
 	$colspan=1;
+
 	for ($i=0;$i<count($toutsujet);$i++){
-	  if (date('Y', intval($toutsujet[$i])) == date('Y', intval($toutsujet[$i+1]))){
+	  $cur = intval($toutsujet[$i]);
+	  $next = isset($toutsujet[$i+1]) ? intval($toutsujet[$i+1]) : false;
+	  if ($next && date('Y', $cur) == date('Y', $next)){
 			$colspan++;
 		}
 		else {
@@ -319,8 +323,8 @@ if ($dsondage->format=="D"||$dsondage->format=="D+"){
 	for ($i=0;$i<count($toutsujet);$i++){
 	  // intval() est utiliser pour supprimer le suffixe @* qui déplaît logiquement à strftime()
 	  $cur = intval($toutsujet[$i]);
-	  $next = intval($toutsujet[$i+1]);
-		if (strftime("%B", $cur) == strftime("%B", $next)&&date('Y',$cur)==date('Y',$next)){
+	  $next = isset($toutsujet[$i+1]) ? intval($toutsujet[$i+1]) : false;
+		if ($next && strftime("%B", $cur) == strftime("%B", $next) && date('Y',$cur)==date('Y',$next)){
 			$colspan++;
 		}
 		else {
@@ -339,8 +343,8 @@ if ($dsondage->format=="D"||$dsondage->format=="D+"){
 	$colspan=1;
 	for ($i=0;$i<count($toutsujet);$i++){
 	  $cur = intval($toutsujet[$i]);
-	  $next = intval($toutsujet[$i+1]);
-		if (strftime("%a %e",$cur)==strftime("%a %e",$next)&&strftime("%B",$cur)==strftime("%B",$next)){
+	  $next = isset($toutsujet[$i+1]) ? intval($toutsujet[$i+1]) : false;
+		if ($next && strftime("%a %e",$cur)==strftime("%a %e",$next)&&strftime("%B",$cur)==strftime("%B",$next)){
 			$colspan++;
 		}
 		else {
@@ -357,7 +361,7 @@ if ($dsondage->format=="D"||$dsondage->format=="D+"){
 		echo '<tr>'."\n";
 		echo '<td></td>'."\n";
 				
-		for ($i=0;$toutsujet[$i];$i++){
+		for ($i=0; isset($toutsujet[$i]);$i++){
 			$heures=explode("@",$toutsujet[$i]);
 			echo '<td class="heure">'.$heures[1].'</td>'."\n";
 		}
@@ -383,7 +387,7 @@ else {
 //Usager pré-authentifié dans la liste?
 	$user_mod = FALSE;
 //affichage des resultats actuels
-$somme = array();
+$somme = array_fill(0, $nbcolonnes, 0);
 	$compteur = 0;
 
 	while ($data=$user_studs->FetchNextObject(false)) {
@@ -419,7 +423,7 @@ $somme = array();
 		    }
 		  }
 		}
-			
+
 			//a la fin de chaque ligne se trouve les boutons modifier
 		if ($compteur != $ligneamodifier && ($dsondage->format=="A+"||$dsondage->format=="D+") && $mod_ok){
 		  echo '<td class=casevide><input type="image" name="modifierligne'.$compteur.'" value="Modifier" src="images/info.png"></td>'."\n";
@@ -507,6 +511,7 @@ $somme = array();
 //  on concatene le resultat dans $meilleursujet
 
 	$compteursujet=0;
+$meilleursujet = '';
 	for ($i=0;$i<$nbcolonnes;$i++){
 		if ($somme[$i]==$meilleurecolonne){
 			$meilleursujet.=", ";
