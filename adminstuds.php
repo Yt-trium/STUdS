@@ -988,8 +988,8 @@ else {
 	  echo '<form name="formulaire2" action="exportpdf.php" method="POST" onkeypress="javascript:process_keypress(event)">'."\n";
 		echo _("Generate the convocation letter (.PDF), choose the place to meet and validate") .'<br>';
 		echo '<input type="text" name="lieureunion" size="100" value="" />';
-		echo '<input type="hidden" name="sondage" value="$numsondageadmin" />';
-		echo '<input type="hidden" name="meilleursujet" value="$meilleursujetexport" />';
+		echo '<input type="hidden" name="sondage" value="' . $numsondageadmin . '" />';
+		echo '<input type="hidden" name="meilleursujet" value="' . $meilleursujetexport . '" />';
 		echo '<input type="image" name="exportpdf" value="Export en PDF" src="images/accept.png" alt="Export PDF"><br><br>';
 		echo '</form>'."\n";
 		// '<font color="#FF0000">'. _("Enter a meeting place!") .'</font><br><br>'."\n";
