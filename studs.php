@@ -83,11 +83,12 @@ if(isset($_GET['export']) && $Sondage) {
   die();
  }
 
+
 // quand on ajoute un commentaire utilisateur
-if(isset($_POST['ajoutcomment'])) {
+if(issetAndNoEmpty('ajoutcomment_x')) {
   if (isset($_SERVER['REMOTE_USER']))
     $comment_user = $_SESSION['nom'];
-  elseif(isset($_POST["commentuser"]) && ! empty($_POST["commentuser"]))
+  elseif(issetAndNoEmpty("commentuser"))
     $comment_user = $connect->qstr(strip_tags($_POST["commentuser"]));
   elseif(isset($_POST["commentuser"]))
     $err |= COMMENT_USER_EMPTY;
@@ -112,12 +113,11 @@ if(isset($_POST['ajoutcomment'])) {
 // Action quand on clique le bouton participer
 $user_studs=$connect->Execute("SELECT * FROM user_studs WHERE id_sondage='$numsondage' ORDER BY id_users");
 $nbcolonnes=substr_count($dsondage->sujet,',')+1;
-if ( ! is_error(NO_POLL) && isset($_POST["boutonp_x"]) ){
-  //Si le nom est bien entré
-  if (! isset($_POST["nom"]) || empty($_POST['nom']))
+if ( ! is_error(NO_POLL) && issetAndNoEmpty('boutonp_x') ){
+  if (! issetAndNoEmpty('nom')) {
     $err |= NAME_EMPTY;
-  if(! is_error(NAME_EMPTY) && 
-     (!isset($_SERVER['REMOTE_USER']) || $_POST["nom"] == $_SESSION["nom"]) ) {
+  }
+  elseif( !isset($_SERVER['REMOTE_USER']) || $_POST["nom"] == $_SESSION["nom"] ) {   // Si le nom est bien entré
     $nouveauchoix = '';
     for ($i=0;$i<$nbcolonnes;$i++){
       // Si la checkbox est enclenchée alors la valeur est 1
