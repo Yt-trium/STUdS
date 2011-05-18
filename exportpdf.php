@@ -39,7 +39,7 @@
 
 session_start();
 
-require_once('fpdf/phpToPDF.php');
+require_once('fpdf/fpdf.php');
 include_once('fonctions.php');
 
 $dsondage = get_sondage_from_id($_POST['numsondage']);
@@ -47,7 +47,7 @@ $lieureunion=stripcslashes($_POST["lieureunion"]);
 $datereunion=explode("@",$_POST["meilleursujet"]);
 
 //creation du fichier PDF
-$PDF=new phpToPDF();
+$PDF=new FPDF();
 $PDF->AddPage();
 $PDF->SetFont('Arial','',11);
 
