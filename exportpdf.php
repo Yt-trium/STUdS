@@ -54,7 +54,8 @@ $PDF->SetFont('Arial','',11);
 //affichage de la date de convocation
 $PDF->Text(140,30,"Le ".date("d/m/Y"));
 
-$PDF->Image("./".LOGOLETTRE."",20,20,65,40);
+if(defined('LOGOLETTRE'))
+  $PDF->Image("./".LOGOLETTRE."",20,20,65,40);
 
 $PDF->SetFont('Arial','U',11);
 $PDF->Text(40,120,"Objet : ");
