@@ -376,8 +376,7 @@ else {
 	echo '<tr>'."\n";
 	echo '<td></td>'."\n";
 
-	for ($i=0;$toutsujet[$i];$i++){
-	
+	for ($i=0;isset($toutsujet[$i]);$i++){
 		echo '<td class="sujet">'.$toutsujet[$i].'</td>'."\n";
 	}
 	echo '</tr>'."\n";

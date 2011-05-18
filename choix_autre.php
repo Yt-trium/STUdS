@@ -72,7 +72,7 @@ if (!$_SESSION["nom"]&&!$_SESSION["adresse"]&&!$_SESSION["commentaires"]&&!$_SES
   //partie creation du sondage dans la base SQL
   //On prépare les données pour les inserer dans la base
   
-  if ($_POST["confirmecreation_x"]) {
+  if (issetAndNoEmpty('confirmecreation_x')) {
     //recuperation des données de champs textes
     for ($i=0;$i<$_SESSION["nbrecases"]+1;$i++) {
       if ($_POST["choix"][$i]) {
@@ -101,11 +101,9 @@ if (!$_SESSION["nom"]&&!$_SESSION["adresse"]&&!$_SESSION["commentaires"]&&!$_SES
   }
   
   // recuperation des sujets pour sondage AUTRE
-  for ($i=0;$i<$_SESSION["nbrecases"];$i++) {
-    if (!preg_match(';<|>|";',$_POST["choix"][$i])) {
-      $_SESSION["choix$i"]=$_POST["choix"][$i];
-    } else {
-      $erreur_injection="yes";
+  for ($i=0;$i<$_SESSION["nbrecases"] && isset($_POST["choix"]);$i++) {
+    if (issetAndNoEmpty("$i", $_POST["choix"])) {
+      $_SESSION["choix$i"] = htmlentities($_POST["choix"][$i], ENT_QUOTES, 'UTF-8'); 
     }
   }
   
@@ -114,7 +112,7 @@ if (!$_SESSION["nom"]&&!$_SESSION["adresse"]&&!$_SESSION["commentaires"]&&!$_SES
     $_SESSION["nbrecases"]=10;
   }
   
-  if ($_POST["ajoutcases"]||$_POST["ajoutcases_x"]) {
+  if (issetAndNoEmpty('ajoutcases') || issetAndNoEmpty('ajoutcases_x')) {
     $_SESSION["nbrecases"]=$_SESSION["nbrecases"]+5;
   }
   
@@ -140,8 +138,11 @@ if (!$_SESSION["nom"]&&!$_SESSION["adresse"]&&!$_SESSION["commentaires"]&&!$_SES
   
   //affichage des cases texte de formulaire
   for ($i=0;$i<$_SESSION["nbrecases"];$i++) {
-    $j=$i+1;
-    echo '<tr><td>'. _("Choice") .' '.$j.' : </td><td><input type="text" name="choix[]" size="40" maxlength="40" value="'.str_replace("\\","",$_SESSION["choix$i"]).'" id="choix'.$i.'"></td></tr>'."\n";
+    // values in $_SESSION have already been htmlentiti'fied()
+    $val = issetAndNoEmpty("choix$i", $_SESSION) ? $_SESSION["choix$i"] : '';
+    echo '<tr><td>'. _("Choice") .' '. ($i + 1) .' : </td>' .
+      '<td><input type="text" name="choix[]" size="40" maxlength="40" value="'. $val .'" id="choix'.$i.'"></td>' .
+      '</tr>'."\n";
   }
   
   echo '</table>'."\n";
@@ -162,23 +163,23 @@ if (!$_SESSION["nom"]&&!$_SESSION["adresse"]&&!$_SESSION["commentaires"]&&!$_SES
   echo '</tr></table>'."\n";
   
   //test de remplissage des cases
+  $rempli = false;
+  $erreur = false;
+
   for ($i=0;$i<$_SESSION["nbrecases"];$i++) {
-    if ($_POST["choix"][$i]!="") {
-      $testremplissage="ok";
+    if (issetAndNoEmpty("choix") && issetAndNoEmpty($i, $_POST["choix"])) {
+      $rempli = true;
+      break;
     }
   }
   
   //message d'erreur si aucun champ renseigné
-  if ($testremplissage!="ok"&&($_POST["fin_sondage_autre"]||$_POST["fin_sondage_autre_x"])) {
+  if (! $rempli && (issetAndNoEmpty('fin_sondage_autre') || issetAndNoEmpty('fin_sondage_autre_x')) ) {
     print "<br><font color=\"#FF0000\">" . _("Enter at least one choice") . "</font><br><br>"."\n";
-    $erreur="yes";
+    $erreur = true;
   }
   
-  if ($erreur_injection) {
-    print "<font color=#FF0000>" . _("Characters \" < and > are not permitted") . "</font><br><br>\n";
-  }
-  
-  if (($_POST["fin_sondage_autre"]||$_POST["fin_sondage_autre_x"])&&!$erreur&&!$erreur_injection) {
+  if (( issetAndNoEmpty('fin_sondage_autre') || issetAndNoEmpty('fin_sondage_autre_x') ) && ! $erreur) {
     //demande de la date de fin du sondage
     echo '<br>'."\n";
     echo '<div class=presentationdatefin>'."\n";
