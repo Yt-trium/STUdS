@@ -228,8 +228,7 @@ echo _("Initiator of the poll") .' : '.$dsondage->nom_admin.'<br><br>'."\n";
 	echo '<br>'."\n";
 echo '</div>'."\n";
 
-echo '<form name="formulaire" action="studs.php"' .
-'#bas" method="POST" onkeypress="javascript:process_keypress(event)">'."\n";
+echo '<form name="formulaire" action="studs.php#bas" method="POST" onkeypress="javascript:process_keypress(event)">'."\n";
 
 echo '<input type="hidden" name="sondage" value="' . $numsondage . '"/>';
 
