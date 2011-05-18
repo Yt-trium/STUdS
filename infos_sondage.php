@@ -93,7 +93,7 @@ if (issetAndNoEmpty("creation_sondage_date") || issetAndNoEmpty("creation_sondag
     $_SESSION["mailsonde"] = false;
   }
   
-  if(validateEmail($adresse) === false) {
+  if(!filter_var($adresse, FILTER_VALIDATE_EMAIL)) {
     $erreur_adresse = true;
   }
   
