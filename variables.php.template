@@ -72,7 +72,7 @@ define('LANGUE', 'fr_FR');
 // Nom et emplacement du logo
 define('LOGOBANDEAU', '<chemin relatif suivi du nom du fichier du logo pour le bandeau>');
 
-// Nom et emplacement du logo de la lettre générée en PDF (optionnel)
+// Nom et emplacement du logo de la lettre générée en PDF
 define('LOGOLETTRE', '<chemin relatif suivi du nom du fichier du logo pour la lettre>');
 
 if (@file_exists('variables.local.php')) {
